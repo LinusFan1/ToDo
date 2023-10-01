@@ -7,6 +7,7 @@
 #define F_TEMP "/home/linus/code/ToDo/tmp.bin"
 #define F_SAVE "/home/linus/code/ToDo/save.bin"
 
+//Dumb github comment
 /*void createSave(){
 FILE *save;
 if ((save = fopen(F_SAVE,"wb")) == NULL){
