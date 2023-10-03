@@ -103,22 +103,29 @@ free(tempStr);
 fclose(fptr);
 }
 
-
-
 int main(int argc, char* argv[]){
-char input;
+ int s = 1;
+ char c;
 FILE *fptr;
-char* userString = malloc(sizeof(char) * BUFF_SIZE);
 int loop = 0;
 //createSave();
 //remove(F_NAME);
 initFile();
-printf("Enter a Task\n");
-fgets(NULL,0,stdin);
+printf("Enter a task or q to quit\n");
+char* userString = malloc(sizeof(char) * BUFF_SIZE);
+while(s != 0){
 fgets(userString,sizeof(char) * BUFF_SIZE,stdin);
 userString[strchr(userString,'\n') - userString] = '\0';
-appendToFile(userString);
-free(userString);
+  if(userString[0] == '\0'){
+    printf("Please enter a character\n");
+ }
+  if(userString[1] == '\0' && userString[0] == 'q'){
+    s = 1;
+    printf("Exiting Program\n");
+    break;
+  }
+  appendToFile(userString);
+ }
 printFile();
 return 0;
 }
