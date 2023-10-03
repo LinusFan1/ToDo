@@ -7,15 +7,14 @@
 #define F_TEMP "/home/linus/code/ToDo/tmp.bin"
 #define F_SAVE "/home/linus/code/ToDo/save.bin"
 
-//Dumb github comment
-/*void createSave(){
+void createSave(){
 FILE *save;
 if ((save = fopen(F_SAVE,"wb")) == NULL){
 	fprintf(stderr, "Error Could Not Open File");
 	exit(1);
 	}
 }
-*/
+
 void initFile(){
 FILE *fptr;
 FILE *save;
@@ -34,6 +33,26 @@ while(fread(&tempChr,sizeof(char),1,save) > 0){
 }
 */
 fclose(fptr);
+}
+
+void loadSave(){
+  char tempChr;
+  FILE* fptr;  
+  FILE* save;
+if ((fptr = fopen(F_NAME,"wb")) == NULL){
+	fprintf(stderr, "Error Could Not Open File");
+	exit(1);
+}
+if ((save = fopen(F_SAVE,"rb")) == NULL){
+	fprintf(stderr, "Error, No Save File\n");
+	exit(1);
+}
+
+while(fread(&tempChr,sizeof(char),1,save) > 0){
+	fwrite(&tempChr,sizeof(char),1,fptr);
+}
+ fclose(fptr);
+ fclose(save);
 }
 
 void saveFile(){
@@ -106,12 +125,11 @@ fclose(fptr);
 int main(int argc, char* argv[]){
  int s = 1;
  char c;
-FILE *fptr;
 int loop = 0;
 //createSave();
 //remove(F_NAME);
 initFile();
-printf("Enter a task or q to quit\n");
+ printf("Enter a task, q to quit, s to save, l to load, p to print, or w! to wipe save\n");
 char* userString = malloc(sizeof(char) * BUFF_SIZE);
 while(s != 0){
 fgets(userString,sizeof(char) * BUFF_SIZE,stdin);
@@ -119,13 +137,30 @@ userString[strchr(userString,'\n') - userString] = '\0';
   if(userString[0] == '\0'){
     printf("Please enter a character\n");
  }
-  if(userString[1] == '\0' && userString[0] == 'q'){
+  if(userString[1] == '\0'){
+    switch(userString[0]){
+    case 'q':
     s = 1;
     printf("Exiting Program\n");
+    exit(1);
     break;
+    case 's':
+    saveFile();
+    break;
+    case 'l':
+    loadSave();
+    break;
+    case 'p':
+    printFile();
+    break;
+    } 
+    }
+  else if(userString[2] == '\0' && userString[1] == '!' && userString[0] == 'w'){
+    remove(F_SAVE);
   }
+  else{
   appendToFile(userString);
+  }
  }
-printFile();
 return 0;
 }
